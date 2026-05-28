@@ -1,1320 +1,686 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Yunnan Tea House - Thai-Yunnan Fusion</title>
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Noto+Serif+Thai:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600&display=swap" rel="stylesheet">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yunnan Tea House</title>
 
-        :root {
-            --tea-brown: #6b4423;
-            --tea-light: #a67c52;
-            --jade-green: #4a7c59;
-            --gold: #c9a961;
-            --cream: #fef9f3;
-            --dark: #2c1810;
-        }
+  <!-- React, ReactDOM, and Babel — loads JSX directly in the browser, no build step -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
 
-        body {
-            font-family: 'Playfair Display', 'Noto Serif Thai', 'Noto Serif SC', serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(to bottom, #fef9f3 0%, #f5ebe0 100%);
-        }
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+SC:wght@400;500;600&family=Noto+Serif+Thai:wght@400;500;600&display=swap" rel="stylesheet">
 
-        /* Header & Navigation */
-        header {
-            background: linear-gradient(135deg, var(--tea-brown) 0%, var(--dark) 100%);
-            color: white;
-            padding: 2rem 1rem;
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            letter-spacing: 2px;
-        }
+    :root {
+      --tea-dark:   #3d2817;
+      --tea-mid:    #6b4423;
+      --tea-light:  #a67c52;
+      --jade:       #4a7c59;
+      --gold:       #c9a961;
+      --cream:      #fef9f3;
+    }
 
-        header p {
-            font-size: 1.2rem;
-            color: var(--gold);
-            font-style: italic;
-        }
+    html { scroll-behavior: smooth; }
 
-        .language-selector {
-            margin-top: 1rem;
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-        }
+    body {
+      font-family: 'Cormorant Garamond','Noto Serif SC','Noto Serif Thai', serif;
+      background: var(--cream);
+      color: #292524;
+    }
 
-        .lang-btn {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid var(--gold);
-            color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-            font-size: 1rem;
-            font-weight: 600;
-        }
+    /* ── NAV ──────────────────────────────────────── */
+    .nav {
+      position: fixed; top: 0; width: 100%; z-index: 999;
+      background: rgba(255,255,255,.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e7e5e4;
+      box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto;
+      padding: .9rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .brand { display: flex; align-items: center; gap: .6rem; }
+    .brand-badge {
+      width: 2.4rem; height: 2.4rem; border-radius: 50%;
+      background: linear-gradient(135deg, #b45309, var(--tea-dark));
+      display: flex; align-items: center; justify-content: center;
+      color: #fef3c7; font-size: 1.1rem; font-family: 'Cinzel', serif;
+    }
+    .brand-name {
+      font-family: 'Cinzel', serif; font-size: 1.35rem;
+      font-weight: 600; color: #292524;
+    }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a {
+      text-decoration: none; color: #57534e; font-weight: 500; font-size: .95rem;
+      position: relative; transition: color .25s;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%);
+      width: 0; height: 2px; background: var(--gold); transition: width .3s;
+    }
+    .nav-links a:hover { color: #292524; }
+    .nav-links a:hover::after { width: 100%; }
 
-        .lang-btn:hover,
-        .lang-btn.active {
-            background: var(--gold);
-            color: var(--dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
+    .lang-bar {
+      display: flex; gap: .25rem;
+      background: #f5f5f4; padding: .25rem; border-radius: 999px;
+    }
+    .lang-bar button {
+      padding: .35rem .9rem; border: none; border-radius: 999px;
+      background: transparent; color: #78716c; font-weight: 600;
+      font-size: .85rem; cursor: pointer; transition: all .25s;
+      font-family: inherit;
+    }
+    .lang-bar button.active {
+      background: white; color: #292524;
+      box-shadow: 0 2px 8px rgba(0,0,0,.12);
+    }
 
-        /* Navigation Menu */
-        nav {
-            background: var(--cream);
-            padding: 1rem;
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            border-bottom: 3px solid var(--gold);
-        }
+    /* ── HERO ─────────────────────────────────────── */
+    .hero {
+      min-height: 100vh; padding-top: 5rem;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      background:
+        linear-gradient(135deg, rgba(61,40,23,.72) 0%, rgba(107,68,35,.62) 100%),
+        repeating-linear-gradient(
+          45deg,
+          rgba(201,169,97,.04) 0px, rgba(201,169,97,.04) 2px,
+          transparent 2px, transparent 20px
+        );
+      position: relative; overflow: hidden;
+    }
+    .hero-orb {
+      position: absolute; border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,169,97,.18), transparent);
+      animation: pulse 6s ease-in-out infinite;
+    }
+    .hero-orb:nth-child(1){ width:500px; height:500px; top:-100px; left:-100px; animation-delay:0s; }
+    .hero-orb:nth-child(2){ width:400px; height:400px; bottom:-80px; right:-80px; animation-delay:3s; }
+    @keyframes pulse { 0%,100%{transform:scale(1);opacity:.6} 50%{transform:scale(1.15);opacity:1} }
 
-        nav a {
-            color: var(--tea-brown);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-        }
+    .hero-body { position: relative; z-index: 2; padding: 2rem; max-width: 56rem; animation: floatY 7s ease-in-out infinite; }
+    @keyframes floatY { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
 
-        nav a:hover {
-            background: var(--gold);
-            color: white;
-            transform: scale(1.05);
-        }
+    .hero-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 6rem; height: 6rem; border-radius: 50%;
+      background: rgba(255,255,255,.12); backdrop-filter: blur(6px);
+      font-size: 3rem; margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow {
+      font-family: 'Cinzel', serif;
+      color: #fde68a; letter-spacing: .2em; font-size: 1rem;
+      text-transform: uppercase; margin-bottom: .75rem;
+    }
+    .hero-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight: 700; color: white; line-height: 1.15; margin-bottom: 1.25rem;
+    }
+    .hero-sub {
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      color: #fde68a; margin-bottom: 2rem; line-height: 1.6;
+    }
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: linear-gradient(135deg, var(--tea-mid), var(--tea-dark));
+      color: white; padding: .9rem 2.4rem; border-radius: 999px;
+      font-size: 1.1rem; font-weight: 600; border: none; cursor: pointer;
+      box-shadow: 0 8px 32px rgba(61,40,23,.35); transition: all .3s;
+      font-family: inherit;
+    }
+    .hero-cta:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(61,40,23,.45); }
 
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-        }
+    /* ── SECTIONS ────────────────────────────────── */
+    section { padding: 5rem 1.5rem; }
+    .section-inner { max-width: 1280px; margin: 0 auto; }
 
-        /* Sections */
-        section {
-            margin: 3rem 0;
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-        }
+    .section-heading {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700; color: var(--tea-dark); text-align: center;
+      margin-bottom: 1rem; position: relative; display: inline-block;
+      left: 50%; transform: translateX(-50%);
+    }
+    .section-heading::after {
+      content: ''; display: block; margin: .6rem auto 0;
+      width: 60px; height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+    .section-lead {
+      font-size: 1.2rem; color: #57534e; text-align: center;
+      max-width: 44rem; margin: 0 auto 3.5rem; line-height: 1.75;
+    }
 
-        section h2 {
-            color: var(--tea-brown);
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            border-bottom: 3px solid var(--gold);
-            padding-bottom: 1rem;
-        }
+    /* ── ABOUT CARDS ─────────────────────────────── */
+    .about { background: white; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 1.5rem; }
+    .card {
+      background: linear-gradient(135deg, var(--cream), white);
+      border: 1px solid #e7e5e4; border-radius: 1rem; padding: 2rem;
+      text-align: center; transition: all .35s cubic-bezier(.4,0,.2,1);
+    }
+    .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(61,40,23,.13); }
+    .card-icon {
+      width: 4rem; height: 4rem; border-radius: 50%; margin: 0 auto 1.25rem;
+      background: linear-gradient(135deg, #d97706, #57534e);
+      display: flex; align-items: center; justify-content: center; font-size: 1.9rem;
+    }
+    .card h3 { font-family:'Cinzel',serif; font-size:1.3rem; color:var(--tea-dark); margin-bottom:.6rem; }
+    .card p  { color:#57534e; line-height:1.65; }
 
-        /* About Section */
-        .about-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
+    /* ── MENU ────────────────────────────────────── */
+    .menu-bg { background: linear-gradient(to bottom, #fafaf9, rgba(254,249,243,.7)); }
+    .menu-cat-title {
+      font-family:'Cinzel',serif; font-size:1.7rem; color:#57534e;
+      text-align:center; margin-bottom:1.5rem;
+      display:flex; align-items:center; justify-content:center; gap:.6rem;
+    }
+    .menu-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+      gap: 1.25rem; margin-bottom: 3.5rem;
+    }
+    .menu-card {
+      background: linear-gradient(135deg, rgba(255,255,255,.9), rgba(255,252,245,.95));
+      border: 1px solid #e7e5e4; border-radius: .875rem; padding: 1.25rem;
+      transition: all .35s cubic-bezier(.4,0,.2,1);
+    }
+    .menu-card:hover { transform: translateY(-6px); box-shadow: 0 16px 36px rgba(61,40,23,.13); }
+    .menu-card h4 { font-family:'Cinzel',serif; font-size:1.1rem; color:#292524; margin-bottom:.4rem; }
+    .menu-card p  { font-size:.9rem; color:#78716c; margin-bottom:.9rem; line-height:1.5; }
+    .menu-price   { font-size:1.4rem; font-weight:600; color:#b45309; }
 
-        .feature-card {
-            background: linear-gradient(135deg, var(--cream) 0%, white 100%);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border: 2px solid var(--gold);
-            transition: all 0.3s;
-            text-align: center;
-        }
+    /* ── FORMS ───────────────────────────────────── */
+    .form-wrap { background: white; }
+    .form-box  { max-width: 54rem; margin: 0 auto; }
+    .form-row  { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 1.25rem; }
+    .field      { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1.25rem; }
+    .field label { font-weight:600; color:var(--tea-mid); font-size:1.05rem; }
+    .field input, .field textarea, .field select {
+      padding: .75rem 1rem; border: 2px solid rgba(107,68,35,.2);
+      border-radius: .6rem; font-family: inherit; font-size: 1rem;
+      background: rgba(255,255,255,.85); transition: all .25s;
+    }
+    .field input:focus, .field textarea:focus, .field select:focus {
+      outline: none; border-color: var(--tea-mid);
+      box-shadow: 0 0 0 4px rgba(107,68,35,.1); background: white;
+    }
+    .field textarea { min-height: 90px; resize: vertical; }
 
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 24px rgba(107, 68, 35, 0.2);
-        }
+    .order-list {
+      background: #fafaf9; border-radius: .75rem;
+      padding: 1rem; max-height: 380px; overflow-y: auto;
+      display: flex; flex-direction: column; gap: .75rem;
+    }
+    .order-row {
+      display: flex; align-items: center; gap: 1rem;
+      background: white; border: 1px solid #e7e5e4;
+      border-radius: .6rem; padding: .85rem 1rem;
+    }
+    .order-row-info { flex: 1; }
+    .order-row-info .name  { font-weight:600; color:#292524; font-size:.95rem; }
+    .order-row-info .price { font-size:.85rem; color:#78716c; }
+    .order-row input[type="number"] {
+      width: 68px; text-align: center;
+      padding: .45rem; border: 2px solid rgba(107,68,35,.2);
+      border-radius: .5rem; font-family: inherit;
+    }
 
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
+    .total-bar {
+      background: linear-gradient(135deg, var(--tea-mid), var(--tea-dark));
+      color: white; border-radius: .75rem; padding: 1.25rem 1.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 1.5rem; font-weight: 700; margin: 1.25rem 0;
+    }
+    .total-bar span { color: var(--gold); }
 
-        .feature-card h3 {
-            color: var(--tea-brown);
-            margin-bottom: 0.5rem;
-        }
+    .btn-submit {
+      width: 100%; padding: 1rem; border: none; border-radius: 999px;
+      background: linear-gradient(135deg, var(--tea-mid), var(--tea-dark));
+      color: white; font-size: 1.15rem; font-weight: 700;
+      cursor: pointer; font-family: inherit;
+      display: flex; align-items: center; justify-content: center; gap: .6rem;
+      transition: all .3s; box-shadow: 0 4px 14px rgba(61,40,23,.25);
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(61,40,23,.35); }
 
-        /* Menu Section */
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
+    /* ── FOOTER ──────────────────────────────────── */
+    footer {
+      background: linear-gradient(135deg, #292524, #1c1917);
+      color: white; padding: 3.5rem 1.5rem;
+    }
+    .footer-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+      gap: 2rem;
+    }
+    .footer-brand { grid-column: span 2; }
+    @media(max-width:640px){ .footer-brand { grid-column: span 1; } }
+    .footer-logo-row {
+      display: flex; align-items: center; gap: .75rem; margin-bottom: .75rem;
+    }
+    .footer-badge {
+      width: 2.8rem; height: 2.8rem; border-radius: 50%;
+      background: linear-gradient(135deg, #d97706, #57534e);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; color: #fef3c7; font-family:'Cinzel',serif;
+    }
+    .footer-title { font-family:'Cinzel',serif; font-size: 1.6rem; }
+    .footer-tagline { color: #fde68a; font-style: italic; }
+    footer h4 { font-family:'Cinzel',serif; color: var(--gold); margin-bottom:.75rem; font-size:1.1rem; }
+    footer p  { color: #d6d3d1; font-size:.95rem; margin:.35rem 0; }
+    footer a  { color: #d6d3d1; text-decoration: none; }
+    footer a:hover { color: var(--gold); }
+    .footer-divider {
+      max-width:1280px; margin: 2rem auto 0;
+      border-top: 1px solid #57534e; padding-top: 1.5rem;
+      text-align: center; color: #a8a29e; font-size: .9rem;
+    }
 
-        .menu-category {
-            background: var(--cream);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border-left: 5px solid var(--gold);
-        }
-
-        .menu-category h3 {
-            color: var(--jade-green);
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .menu-item {
-            margin: 1rem 0;
-            padding: 1rem;
-            background: white;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-
-        .menu-item:hover {
-            background: var(--cream);
-            transform: translateX(5px);
-        }
-
-        .item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .item-name {
-            font-weight: 600;
-            color: var(--tea-brown);
-            font-size: 1.1rem;
-        }
-
-        .item-price {
-            color: var(--gold);
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-
-        .item-description {
-            color: #666;
-            font-size: 0.9rem;
-            font-style: italic;
-        }
-
-        /* Forms */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            color: var(--tea-brown);
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-
-        input,
-        textarea,
-        select {
-            width: 100%;
-            padding: 0.8rem;
-            border: 2px solid var(--tea-light);
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        input:focus,
-        textarea:focus,
-        select:focus {
-            outline: none;
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.2);
-        }
-
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .order-items {
-            background: var(--cream);
-            padding: 1.5rem;
-            border-radius: 10px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .order-item-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            background: white;
-            border-radius: 8px;
-            border: 1px solid var(--tea-light);
-        }
-
-        .order-item-info {
-            flex: 1;
-        }
-
-        .quantity-input {
-            width: 80px;
-            text-align: center;
-        }
-
-        .total-display {
-            background: linear-gradient(135deg, var(--tea-brown) 0%, var(--dark) 100%);
-            color: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin: 1.5rem 0;
-        }
-
-        .total-display span {
-            color: var(--gold);
-        }
-
-        button[type="submit"] {
-            width: 100%;
-            background: linear-gradient(135deg, var(--jade-green) 0%, var(--tea-brown) 100%);
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
-        button[type="submit"]:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-        }
-
-        /* Footer */
-        footer {
-            background: linear-gradient(135deg, var(--dark) 0%, var(--tea-brown) 100%);
-            color: white;
-            padding: 3rem 1rem;
-            text-align: center;
-            margin-top: 3rem;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .footer-section h3 {
-            color: var(--gold);
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
-
-        .footer-section p {
-            margin: 0.5rem 0;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin: 0.5rem 0;
-            justify-content: center;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 2rem;
-            }
-
-            nav {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            section h2 {
-                font-size: 2rem;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Smooth scrolling */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Hide language-specific content */
-        [lang]:not([lang="en"]) {
-            display: none;
-        }
-
-        [lang="en"] {
-            display: block;
-        }
-    </style>
+    /* ── RESPONSIVE ──────────────────────────────── */
+    @media(max-width:768px){
+      .nav-links { display: none; }
+    }
+  </style>
 </head>
 <body>
+  <div id="root"></div>
 
-    <!-- Header -->
-    <header>
-        <h1>🍵 Yunnan Tea House</h1>
-        <p>Thai-Yunnan Fusion</p>
-        
-        <div class="language-selector">
-            <button class="lang-btn active" onclick="changeLanguage('en')">English</button>
-            <button class="lang-btn" onclick="changeLanguage('th')">ไทย</button>
-            <button class="lang-btn" onclick="changeLanguage('zh')">中文</button>
-        </div>
-    </header>
+  <script type="text/babel">
+    const { useState } = React;
 
-    <!-- Navigation -->
-    <nav>
-        <a href="#about">About</a>
-        <a href="#menu">Menu</a>
-        <a href="#order">Order</a>
-        <a href="#reservation">Reservation</a>
-        <a href="#contact">Contact</a>
-    </nav>
-
-    <div class="container">
-
-        <!-- About Section -->
-        <section id="about">
-            <!-- English -->
-            <div lang="en">
-                <h2>About Us</h2>
-                <p style="text-align: center; font-size: 1.2rem; color: #666; margin-bottom: 2rem;">
-                    Experience the perfect blend of authentic Yunnan tea culture and Thai hospitality. 
-                    Our teahouse brings you centuries-old traditions in a warm, modern setting.
-                </p>
-                <div class="about-content">
-                    <div class="feature-card">
-                        <div class="feature-icon">🫖</div>
-                        <h3>Traditional Tea Ceremony</h3>
-                        <p>Experience authentic Gongfu tea preparation with aged Pu'er from ancient tea mountains</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🌿</div>
-                        <h3>Premium Selection</h3>
-                        <p>Hand-selected teas from Yunnan's finest gardens, aged to perfection</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🥟</div>
-                        <h3>Fusion Cuisine</h3>
-                        <p>Authentic Yunnan dishes with Thai influences, crafted by expert chefs</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Thai -->
-            <div lang="th">
-                <h2>เกี่ยวกับเรา</h2>
-                <p style="text-align: center; font-size: 1.2rem; color: #666; margin-bottom: 2rem;">
-                    สัมผัสการผสมผสานที่ลงตัวระหว่างวัฒนธรรมชายูนนานแท้และการต้อนรับแบบไทย 
-                    ร้านชาของเรานำเสนอประเพณีอันยาวนานหลายศตวรรษในบรรยากาศอบอุ่นและทันสมัย
-                </p>
-                <div class="about-content">
-                    <div class="feature-card">
-                        <div class="feature-icon">🫖</div>
-                        <h3>พิธีชงชาแบบดั้งเดิม</h3>
-                        <p>สัมผัสการชงชากงฟูแท้กับชาผู่เอ๋อบ่มจากภูเขาชาโบราณ</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🌿</div>
-                        <h3>คัดสรรพิเศษ</h3>
-                        <p>ชาคัดสรรด้วยมือจากสวนชาชั้นเลิศของยูนนาน บ่มจนสมบูรณ์แบบ</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🥟</div>
-                        <h3>อาหารฟิวชั่น</h3>
-                        <p>อาหารยูนนานแท้ผสมผสานอิทธิพลไทย สร้างสรรค์โดยเชฟผู้เชี่ยวชาญ</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chinese -->
-            <div lang="zh">
-                <h2>关于我们</h2>
-                <p style="text-align: center; font-size: 1.2rem; color: #666; margin-bottom: 2rem;">
-                    体验正宗云南茶文化与泰式待客之道的完美融合。
-                    我们的茶馆在温馨现代的环境中为您呈现数百年的传统。
-                </p>
-                <div class="about-content">
-                    <div class="feature-card">
-                        <div class="feature-icon">🫖</div>
-                        <h3>传统茶艺</h3>
-                        <p>体验正宗功夫茶冲泡，品味来自古茶山的陈年普洱</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🌿</div>
-                        <h3>精选茶品</h3>
-                        <p>手工精选云南顶级茶园茶叶，陈化至完美境界</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🥟</div>
-                        <h3>融合美食</h3>
-                        <p>正宗云南菜融合泰式风味，由专业厨师精心烹制</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Menu Section -->
-        <section id="menu">
-            <!-- English -->
-            <div lang="en">
-                <h2>Our Menu</h2>
-                <div class="menu-grid">
-                    <div class="menu-category">
-                        <h3>🍵 Premium Teas</h3>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">Aged Pu'er (10 Year)</span>
-                                <span class="item-price">฿280</span>
-                            </div>
-                            <p class="item-description">Rich, earthy notes with smooth finish</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">Phoenix Mountain Oolong</span>
-                                <span class="item-price">฿240</span>
-                            </div>
-                            <p class="item-description">Floral aroma with fruity undertones</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">Jasmine Dragon Pearl</span>
-                                <span class="item-price">฿200</span>
-                            </div>
-                            <p class="item-description">Hand-rolled green tea with jasmine</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">Silver Needle White Tea</span>
-                                <span class="item-price">฿260</span>
-                            </div>
-                            <p class="item-description">Delicate, naturally sweet</p>
-                        </div>
-                    </div>
-
-                    <div class="menu-category">
-                        <h3>🥟 Authentic Dishes</h3>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">Crossing Bridge Noodles</span>
-                                <span class="item-price">฿180</span>
-                            </div>
-                            <p class="item-description">Signature Yunnan rice noodles in rich broth</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">Steam Pot Chicken</span>
-                                <span class="item-price">฿320</span>
-                            </div>
-                            <p class="item-description">Traditional herbal chicken soup</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">Dim Sum Selection</span>
-                                <span class="item-price">฿160</span>
-                            </div>
-                            <p class="item-description">Chef's choice of 6 pieces</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">Rose Flower Cake</span>
-                                <span class="item-price">฿80</span>
-                            </div>
-                            <p class="item-description">Sweet pastry with rose petal filling</p>
-                        </div>
-                    </div>
-
-                    <div class="menu-category">
-                        <h3>🌶️ Thai-Yunnan Fusion</h3>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">Spicy Tea Leaf Salad</span>
-                                <span class="item-price">฿140</span>
-                            </div>
-                            <p class="item-description">Fermented tea leaves with Thai herbs</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">Yunnan Curry</span>
-                                <span class="item-price">฿220</span>
-                            </div>
-                            <p class="item-description">Mountain spices meet Thai coconut</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">Tea-Smoked Duck</span>
-                                <span class="item-price">฿280</span>
-                            </div>
-                            <p class="item-description">Smoked with jasmine tea, Thai spices</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Thai -->
-            <div lang="th">
-                <h2>เมนูของเรา</h2>
-                <div class="menu-grid">
-                    <div class="menu-category">
-                        <h3>🍵 ชาพรีเมียม</h3>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">ชาผู่เอ๋อบ่ม 10 ปี</span>
-                                <span class="item-price">฿280</span>
-                            </div>
-                            <p class="item-description">กลิ่นอายดินเข้มข้น จบรสนุ่มลื่น</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">อูหลงภูเขาฟีนิกซ์</span>
-                                <span class="item-price">฿240</span>
-                            </div>
-                            <p class="item-description">กลิ่นดอกไม้พร้อมกลิ่นผลไม้</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">มังกรไข่มุกมะลิ</span>
-                                <span class="item-price">฿200</span>
-                            </div>
-                            <p class="item-description">ชาเขียวม้วนมือกับมะลิ</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">ชาขาวเข็มเงิน</span>
-                                <span class="item-price">฿260</span>
-                            </div>
-                            <p class="item-description">ละเอียดอ่อน หวานธรรมชาติ</p>
-                        </div>
-                    </div>
-
-                    <div class="menu-category">
-                        <h3>🥟 อาหารต้นตำรับ</h3>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">ก๋วยเตี๋ยวข้ามสะพาน</span>
-                                <span class="item-price">฿180</span>
-                            </div>
-                            <p class="item-description">ก๋วยเตี๋ยวข้าวยูนนานในน้ำซุปเข้มข้น</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">ไก่หม้อนึ่ง</span>
-                                <span class="item-price">฿320</span>
-                            </div>
-                            <p class="item-description">ซุปไก่สมุนไพรแบบดั้งเดิม</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">ติ่มซำรวม</span>
-                                <span class="item-price">฿160</span>
-                            </div>
-                            <p class="item-description">เชฟคัดสรร 6 ชิ้น</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">ขนมกุหลาบ</span>
-                                <span class="item-price">฿80</span>
-                            </div>
-                            <p class="item-description">ขนมหวานไส้กลีบกุหลาบ</p>
-                        </div>
-                    </div>
-
-                    <div class="menu-category">
-                        <h3>🌶️ ฟิวชั่นไทย-ยูนนาน</h3>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">ยำใบชาเผ็ด</span>
-                                <span class="item-price">฿140</span>
-                            </div>
-                            <p class="item-description">ใบชาหมักกับสมุนไพรไทย</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">แกงยูนนาน</span>
-                                <span class="item-price">฿220</span>
-                            </div>
-                            <p class="item-description">เครื่องเทศภูเขาผสมกะทิไทย</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">เป็ดรมควันชา</span>
-                                <span class="item-price">฿280</span>
-                            </div>
-                            <p class="item-description">รมด้วยชามะลิ เครื่องเทศไทย</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chinese -->
-            <div lang="zh">
-                <h2>我们的菜单</h2>
-                <div class="menu-grid">
-                    <div class="menu-category">
-                        <h3>🍵 精品茶类</h3>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">陈年普洱（10年）</span>
-                                <span class="item-price">฿280</span>
-                            </div>
-                            <p class="item-description">浓郁的泥土香韵，回味顺滑</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">凤凰山乌龙</span>
-                                <span class="item-price">฿240</span>
-                            </div>
-                            <p class="item-description">花香四溢，带有果香</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">茉莉龙珠</span>
-                                <span class="item-price">฿200</span>
-                            </div>
-                            <p class="item-description">手工绿茶配茉莉花</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">银针白茶</span>
-                                <span class="item-price">฿260</span>
-                            </div>
-                            <p class="item-description">细腻，自然清甜</p>
-                        </div>
-                    </div>
-
-                    <div class="menu-category">
-                        <h3>🥟 正宗菜肴</h3>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">过桥米线</span>
-                                <span class="item-price">฿180</span>
-                            </div>
-                            <p class="item-description">云南招牌米线配浓郁高汤</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">汽锅鸡</span>
-                                <span class="item-price">฿320</span>
-                            </div>
-                            <p class="item-description">传统草药炖鸡汤</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">点心拼盘</span>
-                                <span class="item-price">฿160</span>
-                            </div>
-                            <p class="item-description">主厨精选6件</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">鲜花饼</span>
-                                <span class="item-price">฿80</span>
-                            </div>
-                            <p class="item-description">玫瑰花瓣馅甜点</p>
-                        </div>
-                    </div>
-
-                    <div class="menu-category">
-                        <h3>🌶️ 泰云融合</h3>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">辣味茶叶沙拉</span>
-                                <span class="item-price">฿140</span>
-                            </div>
-                            <p class="item-description">发酵茶叶配泰式香草</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">云南咖喱</span>
-                                <span class="item-price">฿220</span>
-                            </div>
-                            <p class="item-description">山地香料遇见泰式椰奶</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="item-header">
-                                <span class="item-name">茶熏鸭</span>
-                                <span class="item-price">฿280</span>
-                            </div>
-                            <p class="item-description">茉莉花茶熏制，泰式香料</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Order Section -->
-        <section id="order">
-            <!-- English -->
-            <div lang="en">
-                <h2>Place Your Order</h2>
-                <form id="orderForm" onsubmit="submitOrder(event)">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="order-name">Full Name *</label>
-                            <input type="text" id="order-name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="order-phone">Phone Number *</label>
-                            <input type="tel" id="order-phone" name="phone" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="order-email">Email Address *</label>
-                        <input type="email" id="order-email" name="email" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="order-address">Delivery Address *</label>
-                        <textarea id="order-address" name="address" required></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Select Items & Quantity</label>
-                        <div class="order-items" id="orderItems">
-                            <!-- Items will be populated by JavaScript -->
-                        </div>
-                    </div>
-
-                    <div class="total-display">
-                        Total: <span id="orderTotal">฿0</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="order-notes">Special Instructions</label>
-                        <textarea id="order-notes" name="notes"></textarea>
-                    </div>
-
-                    <button type="submit">🛒 Submit Order</button>
-                </form>
-            </div>
-
-            <!-- Thai -->
-            <div lang="th">
-                <h2>สั่งอาหาร</h2>
-                <form id="orderFormTh" onsubmit="submitOrder(event)">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="order-name-th">ชื่อ-นามสกุล *</label>
-                            <input type="text" id="order-name-th" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="order-phone-th">เบอร์โทรศัพท์ *</label>
-                            <input type="tel" id="order-phone-th" name="phone" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="order-email-th">อีเมล *</label>
-                        <input type="email" id="order-email-th" name="email" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="order-address-th">ที่อยู่จัดส่ง *</label>
-                        <textarea id="order-address-th" name="address" required></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label>เลือกรายการและจำนวน</label>
-                        <div class="order-items" id="orderItemsTh">
-                            <!-- Items will be populated by JavaScript -->
-                        </div>
-                    </div>
-
-                    <div class="total-display">
-                        ยอดรวม: <span id="orderTotalTh">฿0</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="order-notes-th">คำแนะนำพิเศษ</label>
-                        <textarea id="order-notes-th" name="notes"></textarea>
-                    </div>
-
-                    <button type="submit">🛒 ยืนยันคำสั่งซื้อ</button>
-                </form>
-            </div>
-
-            <!-- Chinese -->
-            <div lang="zh">
-                <h2>下单订餐</h2>
-                <form id="orderFormZh" onsubmit="submitOrder(event)">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="order-name-zh">姓名 *</label>
-                            <input type="text" id="order-name-zh" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="order-phone-zh">电话号码 *</label>
-                            <input type="tel" id="order-phone-zh" name="phone" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="order-email-zh">电子邮箱 *</label>
-                        <input type="email" id="order-email-zh" name="email" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="order-address-zh">送货地址 *</label>
-                        <textarea id="order-address-zh" name="address" required></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label>选择项目和数量</label>
-                        <div class="order-items" id="orderItemsZh">
-                            <!-- Items will be populated by JavaScript -->
-                        </div>
-                    </div>
-
-                    <div class="total-display">
-                        总计: <span id="orderTotalZh">฿0</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="order-notes-zh">特殊说明</label>
-                        <textarea id="order-notes-zh" name="notes"></textarea>
-                    </div>
-
-                    <button type="submit">🛒 提交订单</button>
-                </form>
-            </div>
-        </section>
-
-        <!-- Reservation Section -->
-        <section id="reservation">
-            <!-- English -->
-            <div lang="en">
-                <h2>Reserve Your Table</h2>
-                <form id="reserveForm" onsubmit="submitReservation(event)">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="reserve-name">Full Name *</label>
-                            <input type="text" id="reserve-name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="reserve-phone">Phone Number *</label>
-                            <input type="tel" id="reserve-phone" name="phone" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="reserve-email">Email Address *</label>
-                        <input type="email" id="reserve-email" name="email" required>
-                    </div>
-
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="reserve-date">Date *</label>
-                            <input type="date" id="reserve-date" name="date" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="reserve-time">Time *</label>
-                            <input type="time" id="reserve-time" name="time" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="reserve-guests">Number of Guests *</label>
-                            <input type="number" id="reserve-guests" name="guests" min="1" max="20" value="2" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="reserve-notes">Special Requests</label>
-                        <textarea id="reserve-notes" name="notes"></textarea>
-                    </div>
-
-                    <button type="submit">📅 Confirm Reservation</button>
-                </form>
-            </div>
-
-            <!-- Thai -->
-            <div lang="th">
-                <h2>จองโต๊ะ</h2>
-                <form id="reserveFormTh" onsubmit="submitReservation(event)">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="reserve-name-th">ชื่อ-นามสกุล *</label>
-                            <input type="text" id="reserve-name-th" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="reserve-phone-th">เบอร์โทรศัพท์ *</label>
-                            <input type="tel" id="reserve-phone-th" name="phone" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="reserve-email-th">อีเมล *</label>
-                        <input type="email" id="reserve-email-th" name="email" required>
-                    </div>
-
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="reserve-date-th">วันที่ *</label>
-                            <input type="date" id="reserve-date-th" name="date" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="reserve-time-th">เวลา *</label>
-                            <input type="time" id="reserve-time-th" name="time" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="reserve-guests-th">จำนวนท่าน *</label>
-                            <input type="number" id="reserve-guests-th" name="guests" min="1" max="20" value="2" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="reserve-notes-th">คำขอพิเศษ</label>
-                        <textarea id="reserve-notes-th" name="notes"></textarea>
-                    </div>
-
-                    <button type="submit">📅 ยืนยันการจอง</button>
-                </form>
-            </div>
-
-            <!-- Chinese -->
-            <div lang="zh">
-                <h2>预订座位</h2>
-                <form id="reserveFormZh" onsubmit="submitReservation(event)">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="reserve-name-zh">姓名 *</label>
-                            <input type="text" id="reserve-name-zh" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="reserve-phone-zh">电话号码 *</label>
-                            <input type="tel" id="reserve-phone-zh" name="phone" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="reserve-email-zh">电子邮箱 *</label>
-                        <input type="email" id="reserve-email-zh" name="email" required>
-                    </div>
-
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="reserve-date-zh">日期 *</label>
-                            <input type="date" id="reserve-date-zh" name="date" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="reserve-time-zh">时间 *</label>
-                            <input type="time" id="reserve-time-zh" name="time" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="reserve-guests-zh">人数 *</label>
-                            <input type="number" id="reserve-guests-zh" name="guests" min="1" max="20" value="2" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="reserve-notes-zh">特殊要求</label>
-                        <textarea id="reserve-notes-zh" name="notes"></textarea>
-                    </div>
-
-                    <button type="submit">📅 确认预订</button>
-                </form>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact">
-            <!-- English -->
-            <div lang="en">
-                <h2>Visit Us</h2>
-                <div style="text-align: center; font-size: 1.2rem;">
-                    <div class="contact-item" style="justify-content: center; margin: 1.5rem 0;">
-                        <span style="font-size: 1.5rem;">📍</span>
-                        <strong>Address:</strong> 123 Silom Road, Bangkok 10500
-                    </div>
-                    <div class="contact-item" style="justify-content: center; margin: 1.5rem 0;">
-                        <span style="font-size: 1.5rem;">📞</span>
-                        <strong>Phone:</strong> +66 2 123 4567
-                    </div>
-                    <div class="contact-item" style="justify-content: center; margin: 1.5rem 0;">
-                        <span style="font-size: 1.5rem;">✉️</span>
-                        <strong>Email:</strong> info@yunnanteahouse.com
-                    </div>
-                    <div class="contact-item" style="justify-content: center; margin: 1.5rem 0;">
-                        <span style="font-size: 1.5rem;">🕐</span>
-                        <strong>Hours:</strong> Daily 10:00 AM - 10:00 PM
-                    </div>
-                </div>
-            </div>
-
-            <!-- Thai -->
-            <div lang="th">
-                <h2>เยี่ยมชมเรา</h2>
-                <div style="text-align: center; font-size: 1.2rem;">
-                    <div class="contact-item" style="justify-content: center; margin: 1.5rem 0;">
-                        <span style="font-size: 1.5rem;">📍</span>
-                        <strong>ที่อยู่:</strong> 123 ถนนสีลม กรุงเทพฯ 10500
-                    </div>
-                    <div class="contact-item" style="justify-content: center; margin: 1.5rem 0;">
-                        <span style="font-size: 1.5rem;">📞</span>
-                        <strong>โทรศัพท์:</strong> +66 2 123 4567
-                    </div>
-                    <div class="contact-item" style="justify-content: center; margin: 1.5rem 0;">
-                        <span style="font-size: 1.5rem;">✉️</span>
-                        <strong>อีเมล:</strong> info@yunnanteahouse.com
-                    </div>
-                    <div class="contact-item" style="justify-content: center; margin: 1.5rem 0;">
-                        <span style="font-size: 1.5rem;">🕐</span>
-                        <strong>เวลาทำการ:</strong> ทุกวัน 10:00 - 22:00 น.
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chinese -->
-            <div lang="zh">
-                <h2>访问我们</h2>
-                <div style="text-align: center; font-size: 1.2rem;">
-                    <div class="contact-item" style="justify-content: center; margin: 1.5rem 0;">
-                        <span style="font-size: 1.5rem;">📍</span>
-                        <strong>地址:</strong> 曼谷 Silom 路 123 号 10500
-                    </div>
-                    <div class="contact-item" style="justify-content: center; margin: 1.5rem 0;">
-                        <span style="font-size: 1.5rem;">📞</span>
-                        <strong>电话:</strong> +66 2 123 4567
-                    </div>
-                    <div class="contact-item" style="justify-content: center; margin: 1.5rem 0;">
-                        <span style="font-size: 1.5rem;">✉️</span>
-                        <strong>邮箱:</strong> info@yunnanteahouse.com
-                    </div>
-                    <div class="contact-item" style="justify-content: center; margin: 1.5rem 0;">
-                        <span style="font-size: 1.5rem;">🕐</span>
-                        <strong>营业时间:</strong> 每日 10:00 - 22:00
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </div>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Yunnan Tea House</h3>
-                <p>Authentic tea culture meets Thai hospitality</p>
-            </div>
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <p><a href="#about" style="color: white;">About Us</a></p>
-                <p><a href="#menu" style="color: white;">Menu</a></p>
-                <p><a href="#order" style="color: white;">Order Now</a></p>
-            </div>
-            <div class="footer-section">
-                <h3>Follow Us</h3>
-                <p>Facebook | Instagram | Line</p>
-                <p style="margin-top: 1rem;">© 2024 Yunnan Tea House</p>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        // Menu items data
-        const menuItems = [
-            { name: { en: "Aged Pu'er (10 Year)", th: "ชาผู่เอ๋อบ่ม 10 ปี", zh: "陈年普洱（10年）" }, price: 280 },
-            { name: { en: "Phoenix Mountain Oolong", th: "อูหลงภูเขาฟีนิกซ์", zh: "凤凰山乌龙" }, price: 240 },
-            { name: { en: "Jasmine Dragon Pearl", th: "มังกรไข่มุกมะลิ", zh: "茉莉龙珠" }, price: 200 },
-            { name: { en: "Silver Needle White Tea", th: "ชาขาวเข็มเงิน", zh: "银针白茶" }, price: 260 },
-            { name: { en: "Crossing Bridge Noodles", th: "ก๋วยเตี๋ยวข้ามสะพาน", zh: "过桥米线" }, price: 180 },
-            { name: { en: "Steam Pot Chicken", th: "ไก่หม้อนึ่ง", zh: "汽锅鸡" }, price: 320 },
-            { name: { en: "Dim Sum Selection", th: "ติ่มซำรวม", zh: "点心拼盘" }, price: 160 },
-            { name: { en: "Rose Flower Cake", th: "ขนมกุหลาบ", zh: "鲜花饼" }, price: 80 },
-            { name: { en: "Spicy Tea Leaf Salad", th: "ยำใบชาเผ็ด", zh: "辣味茶叶沙拉" }, price: 140 },
-            { name: { en: "Yunnan Curry", th: "แกงยูนนาน", zh: "云南咖喱" }, price: 220 },
-            { name: { en: "Tea-Smoked Duck", th: "เป็ดรมควันชา", zh: "茶熏鸭" }, price: 280 }
-        ];
-
-        let currentLanguage = 'en';
-
-        // Change language function
-        function changeLanguage(lang) {
-            currentLanguage = lang;
-            
-            // Update language button states
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-
-            // Hide all language content
-            document.querySelectorAll('[lang]').forEach(el => {
-                el.style.display = 'none';
-            });
-
-            // Show selected language content
-            document.querySelectorAll(`[lang="${lang}"]`).forEach(el => {
-                el.style.display = 'block';
-            });
-
-            // Refresh order items
-            populateOrderItems();
+    /* ── TRANSLATIONS ─────────────────────────────── */
+    const T = {
+      en: {
+        site: "Cloud Peak Tea House",
+        tagline: "Authentic Yunnan Tea Experience",
+        nav: ["About","Menu","Order","Reserve"],
+        hero: {
+          eyebrow: "Welcome to",
+          sub: "Experience the ancient art of Yunnan tea culture in the heart of Bangkok",
+          cta: "Explore Menu"
+        },
+        about: {
+          title: "Our Story",
+          lead: "Nestled in the misty mountains of Yunnan, our tea traditions span centuries. We bring you authentic Pu'er, handcrafted dim sum, and the warm hospitality of Southwest China.",
+          cards: [
+            { icon:"🫖", title:"Tea Ceremony",     desc:"Authentic Gongfu tea preparation" },
+            { icon:"🍃", title:"Premium Pu'er",    desc:"Aged teas from century-old trees" },
+            { icon:"🥟", title:"Yunnan Cuisine",   desc:"Flavours from China's tea capital" }
+          ]
+        },
+        menu: {
+          title: "Our Menu",
+          tea: { heading:"🍵 Premium Teas", items:[
+            { name:"Aged Pu'er (10 Year)",       desc:"Rich, earthy notes, smooth finish",    price:280 },
+            { name:"Phoenix Mountain Oolong",    desc:"Floral aroma with fruity undertones",  price:240 },
+            { name:"Dian Hong Black Tea",        desc:"Malty sweetness with golden tips",     price:220 },
+            { name:"Silver Needle White Tea",    desc:"Delicate and naturally sweet",         price:260 },
+            { name:"Jasmine Dragon Pearl",       desc:"Hand-rolled green tea with jasmine",   price:200 },
+          ]},
+          food: { heading:"🥟 Authentic Dishes", items:[
+            { name:"Crossing Bridge Noodles",    desc:"Signature Yunnan rice noodles",        price:180 },
+            { name:"Steam Pot Chicken",          desc:"Traditional herbal chicken soup",      price:320 },
+            { name:"Rose Flower Cake",           desc:"Sweet pastry with rose petal filling", price:80  },
+            { name:"Dim Sum Selection",          desc:"Chef's choice of 6 pieces",           price:160 },
+            { name:"Wild Mushroom Platter",      desc:"Local seasonal mushrooms",             price:240 },
+          ]},
+        },
+        order: {
+          title:"Place Your Order",
+          name:"Full Name", phone:"Phone Number", email:"Email Address",
+          address:"Delivery Address", items:"Select Items & Quantities",
+          notes:"Special Instructions", totalLabel:"Total",
+          submit:"🛒 Submit Order",
+          success:"Order received! We'll be in touch shortly."
+        },
+        reserve: {
+          title:"Reserve Your Table",
+          name:"Full Name", phone:"Phone Number", email:"Email Address",
+          date:"Date", time:"Time", guests:"Number of Guests",
+          notes:"Special Requests", submit:"📅 Confirm Reservation",
+          success:"Reservation confirmed! See you soon."
+        },
+        contact: {
+          title:"Visit Us",
+          address:"123 Silom Road, Bangkok 10500",
+          phone:"+66 2 123 4567",
+          email:"info@cloudpeaktea.com",
+          hours:"Daily 10:00 – 22:00"
         }
+      },
 
-        // Populate order items
-        function populateOrderItems() {
-            const containers = {
-                en: document.getElementById('orderItems'),
-                th: document.getElementById('orderItemsTh'),
-                zh: document.getElementById('orderItemsZh')
-            };
+      th: {
+        site: "ร้านชาเมฆยอดเขา",
+        tagline: "ประสบการณ์ชายูนนานแท้",
+        nav: ["เกี่ยวกับเรา","เมนู","สั่งอาหาร","จองโต๊ะ"],
+        hero: {
+          eyebrow: "ยินดีต้อนรับสู่",
+          sub: "สัมผัสศิลปะการชงชายูนนานโบราณในใจกลางกรุงเทพฯ",
+          cta: "ดูเมนู"
+        },
+        about: {
+          title: "เรื่องราวของเรา",
+          lead: "ท่ามกลางหมอกบนภูเขายูนนาน ประเพณีชาของเรามีมายาวนานหลายศตวรรษ เรานำชาผู่เอ๋อแท้ ติ่มซำทำด้วยมือ และการต้อนรับอันอบอุ่นมาสู่คุณ",
+          cards: [
+            { icon:"🫖", title:"พิธีชงชา",         desc:"การชงชากงฟูแท้" },
+            { icon:"🍃", title:"ชาผู่เอ๋อชั้นเลิศ", desc:"ชาบ่มจากต้นชาอายุร้อยปี" },
+            { icon:"🥟", title:"อาหารยูนนาน",      desc:"รสชาติแท้จากเมืองหลวงชาของจีน" }
+          ]
+        },
+        menu: {
+          title: "เมนูของเรา",
+          tea: { heading:"🍵 ชาพรีเมียม", items:[
+            { name:"ชาผู่เอ๋อบ่ม 10 ปี",      desc:"กลิ่นอายดิน เข้มข้น จบนุ่ม",   price:280 },
+            { name:"อูหลงภูเขาฟีนิกซ์",       desc:"กลิ่นดอกไม้พร้อมกลิ่นผลไม้",  price:240 },
+            { name:"ชาดำเตี้ยนหง",            desc:"หวานมอลต์พร้อมยอดทอง",        price:220 },
+            { name:"ชาขาวเข็มเงิน",           desc:"ละเอียดอ่อน หวานธรรมชาติ",    price:260 },
+            { name:"มังกรไข่มุกมะลิ",         desc:"ชาเขียวม้วนมือกับมะลิ",       price:200 },
+          ]},
+          food: { heading:"🥟 อาหารต้นตำรับ", items:[
+            { name:"ก๋วยเตี๋ยวข้ามสะพาน",    desc:"ก๋วยเตี๋ยวข้าวยูนนานซุปเข้มข้น", price:180 },
+            { name:"ไก่หม้อนึ่ง",            desc:"ซุปไก่สมุนไพรแบบดั้งเดิม",      price:320 },
+            { name:"ขนมกุหลาบ",             desc:"ขนมหวานไส้กลีบกุหลาบ",          price:80  },
+            { name:"ติ่มซำรวม",             desc:"เชฟคัดสรร 6 ชิ้น",             price:160 },
+            { name:"จานเห็ดป่า",             desc:"เห็ดท้องถิ่นตามฤดูกาล",         price:240 },
+          ]},
+        },
+        order: {
+          title:"สั่งอาหาร",
+          name:"ชื่อ-นามสกุล", phone:"เบอร์โทรศัพท์", email:"อีเมล",
+          address:"ที่อยู่จัดส่ง", items:"เลือกรายการและจำนวน",
+          notes:"คำแนะนำพิเศษ", totalLabel:"ยอดรวม",
+          submit:"🛒 ยืนยันคำสั่งซื้อ",
+          success:"รับคำสั่งซื้อแล้ว! เราจะติดต่อกลับเร็วๆ นี้"
+        },
+        reserve: {
+          title:"จองโต๊ะ",
+          name:"ชื่อ-นามสกุล", phone:"เบอร์โทรศัพท์", email:"อีเมล",
+          date:"วันที่", time:"เวลา", guests:"จำนวนท่าน",
+          notes:"คำขอพิเศษ", submit:"📅 ยืนยันการจอง",
+          success:"ยืนยันการจองแล้ว! แล้วพบกันเร็วๆ นี้"
+        },
+        contact: {
+          title:"เยี่ยมชมเรา",
+          address:"123 ถนนสีลม กรุงเทพฯ 10500",
+          phone:"+66 2 123 4567",
+          email:"info@cloudpeaktea.com",
+          hours:"เปิดทุกวัน 10:00 – 22:00"
+        }
+      },
 
-            Object.keys(containers).forEach(lang => {
-                if (!containers[lang]) return;
-                
-                containers[lang].innerHTML = menuItems.map((item, index) => `
-                    <div class="order-item-row">
-                        <div class="order-item-info">
-                            <div style="font-weight: 600;">${item.name[lang]}</div>
-                            <div style="color: #999;">฿${item.price}</div>
+      zh: {
+        site: "云峰茶馆",
+        tagline: "正宗云南茶艺体验",
+        nav: ["关于我们","菜单","订餐","订位"],
+        hero: {
+          eyebrow: "欢迎光临",
+          sub: "在曼谷市中心体验古老的云南茶文化艺术",
+          cta: "查看菜单"
+        },
+        about: {
+          title: "我们的故事",
+          lead: "坐落于云南雾蒙蒙的群山之中，我们的茶传统跨越数百年，为您带来正宗的普洱茶、手工点心和中国西南部的温馨待客之道。",
+          cards: [
+            { icon:"🫖", title:"传统茶艺",    desc:"体验正宗的功夫茶冲泡" },
+            { icon:"🍃", title:"优质普洱精选", desc:"来自百年古树的陈年茶" },
+            { icon:"🥟", title:"云南美食",    desc:"来自中国茶都的正宗风味" }
+          ]
+        },
+        menu: {
+          title: "我们的菜单",
+          tea: { heading:"🍵 精品茶类", items:[
+            { name:"陈年普洱（10年）",  desc:"浓郁泥土香韵，回味顺滑",     price:280 },
+            { name:"凤凰山乌龙",       desc:"花香四溢，带有果香",         price:240 },
+            { name:"滇红",            desc:"麦芽甜味配金毫",            price:220 },
+            { name:"银针白茶",         desc:"细腻，自然清甜",            price:260 },
+            { name:"茉莉龙珠",         desc:"手工绿茶配茉莉花",          price:200 },
+          ]},
+          food: { heading:"🥟 正宗菜肴", items:[
+            { name:"过桥米线",    desc:"云南招牌米线配浓郁高汤",  price:180 },
+            { name:"汽锅鸡",     desc:"传统草药炖鸡汤",         price:320 },
+            { name:"鲜花饼",     desc:"玫瑰花瓣馅甜点",         price:80  },
+            { name:"点心拼盘",   desc:"主厨精选6件",            price:160 },
+            { name:"野生菌拼盘", desc:"当地时令菌类",           price:240 },
+          ]},
+        },
+        order: {
+          title:"下单订餐",
+          name:"姓名", phone:"电话号码", email:"电子邮箱",
+          address:"送货地址", items:"选择项目和数量",
+          notes:"特殊说明", totalLabel:"总计",
+          submit:"🛒 提交订单",
+          success:"订单已收到！我们会尽快联系您。"
+        },
+        reserve: {
+          title:"预订座位",
+          name:"姓名", phone:"电话号码", email:"电子邮箱",
+          date:"日期", time:"时间", guests:"人数",
+          notes:"特殊要求", submit:"📅 确认预订",
+          success:"预订已确认！期待您的光临。"
+        },
+        contact: {
+          title:"访问我们",
+          address:"曼谷 Silom 路 123 号 10500",
+          phone:"+66 2 123 4567",
+          email:"info@cloudpeaktea.com",
+          hours:"每日 10:00 – 22:00"
+        }
+      }
+    };
+
+    /* ── APP ──────────────────────────────────────── */
+    function App() {
+      const [lang, setLang] = useState("en");
+      const t = T[lang];
+      const allItems = [...t.menu.tea.items, ...t.menu.food.items];
+      const [qty, setQty] = useState({});
+
+      const setItemQty = (name, val) =>
+        setQty(q => ({ ...q, [name]: Math.max(0, parseInt(val) || 0) }));
+
+      const total = allItems.reduce((s, item) => s + (qty[item.name] || 0) * item.price, 0);
+
+      const scrollTo = id => document.getElementById(id)?.scrollIntoView({ behavior:"smooth" });
+
+      const handleOrder = e => {
+        e.preventDefault();
+        alert(t.order.success);
+        e.target.reset();
+        setQty({});
+      };
+      const handleReserve = e => {
+        e.preventDefault();
+        alert(t.reserve.success);
+        e.target.reset();
+      };
+
+      return (
+        <>
+          {/* NAV */}
+          <nav className="nav">
+            <div className="nav-inner">
+              <div className="brand">
+                <div className="brand-badge">茶</div>
+                <span className="brand-name">{t.site}</span>
+              </div>
+              <div className="nav-links">
+                {["about","menu","order","reserve"].map((id,i) => (
+                  <a key={id} href={`#${id}`} onClick={e=>{e.preventDefault();scrollTo(id);}}>
+                    {t.nav[i]}
+                  </a>
+                ))}
+              </div>
+              <div className="lang-bar">
+                {["en","th","zh"].map(l => (
+                  <button key={l} className={lang===l?"active":""} onClick={()=>setLang(l)}>
+                    {l.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </nav>
+
+          {/* HERO */}
+          <section id="hero" className="hero">
+            <div className="hero-orb" /><div className="hero-orb" />
+            <div className="hero-body">
+              <div className="hero-icon">🍵</div>
+              <p className="hero-eyebrow">{t.hero.eyebrow}</p>
+              <h1 className="hero-title">{t.site}</h1>
+              <p className="hero-sub">{t.hero.sub}</p>
+              <button className="hero-cta" onClick={()=>scrollTo("menu")}>
+                {t.hero.cta} ▾
+              </button>
+            </div>
+          </section>
+
+          {/* ABOUT */}
+          <section id="about" className="about">
+            <div className="section-inner">
+              <h2 className="section-heading">{t.about.title}</h2>
+              <p className="section-lead">{t.about.lead}</p>
+              <div className="cards">
+                {t.about.cards.map(c => (
+                  <div key={c.title} className="card">
+                    <div className="card-icon">{c.icon}</div>
+                    <h3>{c.title}</h3>
+                    <p>{c.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* MENU */}
+          <section id="menu" className="menu-bg">
+            <div className="section-inner">
+              <h2 className="section-heading">{t.menu.title}</h2>
+              {[t.menu.tea, t.menu.food].map(cat => (
+                <div key={cat.heading}>
+                  <p className="menu-cat-title">{cat.heading}</p>
+                  <div className="menu-grid">
+                    {cat.items.map(item => (
+                      <div key={item.name} className="menu-card">
+                        <h4>{item.name}</h4>
+                        <p>{item.desc}</p>
+                        <div className="menu-price">฿{item.price}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* ORDER */}
+          <section id="order" className="form-wrap">
+            <div className="section-inner">
+              <div className="form-box">
+                <h2 className="section-heading">{t.order.title}</h2>
+                <form onSubmit={handleOrder} style={{marginTop:"2.5rem"}}>
+                  <div className="form-row">
+                    <div className="field"><label>{t.order.name}</label><input type="text" required /></div>
+                    <div className="field"><label>{t.order.phone}</label><input type="tel" required /></div>
+                  </div>
+                  <div className="field"><label>{t.order.email}</label><input type="email" required /></div>
+                  <div className="field"><label>{t.order.address}</label><textarea required /></div>
+                  <div className="field">
+                    <label>{t.order.items}</label>
+                    <div className="order-list">
+                      {allItems.map(item => (
+                        <div key={item.name} className="order-row">
+                          <div className="order-row-info">
+                            <div className="name">{item.name}</div>
+                            <div className="price">฿{item.price}</div>
+                          </div>
+                          <input
+                            type="number" min="0" max="20"
+                            value={qty[item.name] || 0}
+                            onChange={e => setItemQty(item.name, e.target.value)}
+                          />
                         </div>
-                        <input 
-                            type="number" 
-                            class="quantity-input" 
-                            min="0" 
-                            max="10" 
-                            value="0"
-                            data-price="${item.price}"
-                            data-lang="${lang}"
-                            onchange="calculateTotal('${lang}')"
-                        >
+                      ))}
                     </div>
-                `).join('');
-            });
-        }
+                  </div>
+                  <div className="total-bar">
+                    <span>{t.order.totalLabel}</span>
+                    <span>฿{total}</span>
+                  </div>
+                  <div className="field"><label>{t.order.notes}</label><textarea /></div>
+                  <button type="submit" className="btn-submit">{t.order.submit}</button>
+                </form>
+              </div>
+            </div>
+          </section>
 
-        // Calculate total
-        function calculateTotal(lang) {
-            const container = {
-                en: 'orderItems',
-                th: 'orderItemsTh',
-                zh: 'orderItemsZh'
-            }[lang];
+          {/* RESERVE */}
+          <section id="reserve" className="menu-bg">
+            <div className="section-inner">
+              <div className="form-box">
+                <h2 className="section-heading">{t.reserve.title}</h2>
+                <form onSubmit={handleReserve} style={{marginTop:"2.5rem"}}>
+                  <div className="form-row">
+                    <div className="field"><label>{t.reserve.name}</label><input type="text" required /></div>
+                    <div className="field"><label>{t.reserve.phone}</label><input type="tel" required /></div>
+                  </div>
+                  <div className="field"><label>{t.reserve.email}</label><input type="email" required /></div>
+                  <div className="form-row">
+                    <div className="field"><label>{t.reserve.date}</label><input type="date" required /></div>
+                    <div className="field"><label>{t.reserve.time}</label><input type="time" required /></div>
+                    <div className="field"><label>{t.reserve.guests}</label><input type="number" min="1" max="20" defaultValue="2" required /></div>
+                  </div>
+                  <div className="field"><label>{t.reserve.notes}</label><textarea /></div>
+                  <button type="submit" className="btn-submit">{t.reserve.submit}</button>
+                </form>
+              </div>
+            </div>
+          </section>
 
-            const totalDisplay = {
-                en: 'orderTotal',
-                th: 'orderTotalTh',
-                zh: 'orderTotalZh'
-            }[lang];
+          {/* FOOTER */}
+          <footer>
+            <div className="footer-inner">
+              <div className="footer-brand">
+                <div className="footer-logo-row">
+                  <div className="footer-badge">茶</div>
+                  <span className="footer-title">{t.site}</span>
+                </div>
+                <p className="footer-tagline">{t.tagline}</p>
+              </div>
+              <div>
+                <h4>{t.contact.title}</h4>
+                <p>📍 {t.contact.address}</p>
+                <p>📞 {t.contact.phone}</p>
+                <p>✉️ {t.contact.email}</p>
+                <p>🕐 {t.contact.hours}</p>
 
-            let total = 0;
-            document.querySelectorAll(`#${container} .quantity-input`).forEach(input => {
-                const quantity = parseInt(input.value) || 0;
-                const price = parseInt(input.dataset.price);
-                total += quantity * price;
-            });
+              </div>
+              <div>
+                <h4>Links</h4>
+                {["about","menu","order","reserve"].map((id,i) => (
+                  <p key={id}><a href={`#${id}`} onClick={e=>{e.preventDefault();scrollTo(id);}}>{t.nav[i]}</a></p>
+                ))}
+              </div>
+            </div>
+            <div className="footer-divider">
+              © 2026 {t.site} · All rights reserved
+            </div>
+          </footer>
+        </>
+      );
+    }
 
-            document.getElementById(totalDisplay).textContent = `฿${total}`;
-        }
-
-        // Submit order
-        function submitOrder(event) {
-            event.preventDefault();
-            const formData = new FormData(event.target);
-            const data = Object.fromEntries(formData);
-            
-            // Get order items
-            const items = [];
-            event.target.querySelectorAll('.quantity-input').forEach((input, index) => {
-                const quantity = parseInt(input.value) || 0;
-                if (quantity > 0) {
-                    items.push({
-                        item: menuItems[index].name[currentLanguage],
-                        quantity: quantity,
-                        price: menuItems[index].price
-                    });
-                }
-            });
-            
-            data.items = items;
-            data.total = document.querySelector(`#orderTotal${currentLanguage === 'en' ? '' : currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1)}`).textContent;
-            
-            console.log('Order submitted:', data);
-            alert(currentLanguage === 'en' ? 'Order received! We will contact you shortly.' :
-                  currentLanguage === 'th' ? 'รับคำสั่งซื้อแล้ว! เราจะติดต่อกลับเร็วๆ นี้' :
-                  '订单已收到！我们会尽快联系您。');
-            event.target.reset();
-            populateOrderItems();
-        }
-
-        // Submit reservation
-        function submitReservation(event) {
-            event.preventDefault();
-            const formData = new FormData(event.target);
-            const data = Object.fromEntries(formData);
-            
-            console.log('Reservation submitted:', data);
-            alert(currentLanguage === 'en' ? 'Reservation confirmed! See you soon.' :
-                  currentLanguage === 'th' ? 'ยืนยันการจองแล้ว! แล้วพบกันเร็วๆ นี้' :
-                  '预订已确认！期待您的光临。');
-            event.target.reset();
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            populateOrderItems();
-        });
-    </script>
-
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
 </body>
 </html>
